@@ -2,14 +2,32 @@ var db = require('../db');
 
 module.exports = {
   messages: {
-    get: function () {}, // a function which produces all the messages
-    post: function () {} // a function which can be used to insert a message into the database
+    get: function (callback) {
+      db.connect()
+      db.query('select * from messages', function (error, results) {
+        if (error) {
+          console.log(error);
+          callback(error);
+          db.end();
+        } else {
+          // console.log('da poopoo ', results);
+          callback(error, results);
+          db.end();
+        }
+      })
+    }, // a function which produces all the messages
+    post: function (req, res) { } // a function which can be used to insert a message into the database
   },
 
   users: {
     // Ditto as above.
-    get: function () {},
-    post: function () {}
+    get: function (req, res) { },
+    post: function (req, res) {
+      console.log('Serving request type ' + req.method + ' for url ' + req.url);
+      // res.write(req.body);
+      // console.log(req);
+      res.end(JSON.stringify(req.body));
+    }
   }
 };
 
