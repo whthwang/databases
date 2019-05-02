@@ -8,7 +8,7 @@ module.exports = {
       models.messages.get((error, results) => {
         if (error) {
           console.log(error);
-          res.sendStatus(404);
+          res.status(404);
           res.end();
         } else {
           res.status(200).send(JSON.stringify(results));
@@ -16,8 +16,15 @@ module.exports = {
       })
     },
     post: function (req, res) {
-      models.messages.post(req, res);
-      res.end();
+      models.messages.post(req.body, (error, results) => {
+        if (error) {
+          console.log(error);
+          res.status(404).end();
+        } else {
+          // console.log(req.body);
+          res.status(200).send(JSON.stringify(results));
+        }
+      });
     }
   },
 
