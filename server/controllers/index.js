@@ -1,6 +1,8 @@
 var models = require('../models');
 // var mysql = require('mysql');
 // var db = require('../db');
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('chat','student','student');
 
 module.exports = {
   messages: {
@@ -30,15 +32,29 @@ module.exports = {
 
   users: {
     get: function (req, res) {
-      res.send('hello from users.get');
-      res.end();
+      models.users.get((error, results) => {
+        if (error) {
+          console.log(error);
+          res.status(404).end();
+        } else {
+          res.status(200).send(JSON.stringify(results));
+        }
+      })
     },
     post: function (req, res) {
-      console.log('Serving request type ' + req.method +  ' for url ' + req.url);
-      db.insert();
+      models.users.post(req.body, (error, results) => {
+        if (error) {
+          console.log(error);
+          res.status(404).end();
+        } else {
+          res.status(200).end(JSON.stringify(results));
+        }
+      })
+      // console.log('Serving request type ' + req.method +  ' for url ' + req.url);
+      // db.insert();
       // res.write(req.body);
       // console.log(req);
-      res.end(JSON.stringify(req.body));
+      // res.end(JSON.stringify(req.body));
     }
   }
 };

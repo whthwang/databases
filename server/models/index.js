@@ -18,7 +18,7 @@ module.exports = {
     }, // a function which produces all the messages
     post: function (reqBody, callback) {
       // db.connect()
-      db.query(`INSERT INTO messages (id, user, text) VALUES (null, '${reqBody.username}', '${reqBody.message}')` , function (error, results) {
+      db.query(`INSERT INTO messages (id, user, text) VALUES (null, "${reqBody.username}", "${reqBody.message}")` , function (error, results) {
         if (error) {
           console.log(error);
           callback(error);
@@ -33,12 +33,34 @@ module.exports = {
 
   users: {
     // Ditto as above.
-    get: function (req, res) { },
-    post: function (req, res) {
-      console.log('Serving request type ' + req.method + ' for url ' + req.url);
+    get: function (callback) {
+      db.query('select * from users', function (error, results) {
+        if (error) {
+          console.log(error);
+          callback(error);
+          // db.end();
+        } else {
+          // console.log('da poopoo ', results);
+          callback(error, results);
+          // db.end();
+        }
+      })
+     },
+    post: function (reqBody, callback) {
+      db.query(`INSERT INTO users (id, name) VALUES (null, '${reqBody.name}')`, function (error, results) {
+        if (error) {
+          console.log(error);
+          callback(error);
+          // db.end();
+        } else {
+          callback(error, results);
+          // db.end();
+        }
+      })
+      // console.log('Serving request type ' + req.method + ' for url ' + req.url);
       // res.write(req.body);
       // console.log(req);
-      res.end(JSON.stringify(req.body));
+      // res.end(JSON.stringify(req.body));
     }
   }
 };
